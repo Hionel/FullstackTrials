@@ -1,0 +1,76 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.flexRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.content-wrapper {
+  height: 100vh;
+  gap: 1rem;
+  background-color: rgb(70, 70, 150);
+}
+
+.form {
+  height: 100%;
+  width: 50vw;
+  padding: 1.5rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+  gap: 1.5rem;
+}
+
+mat-form-field {
+  width: 100%;
+  .visibility__toogle-icon {
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    bottom: 15px;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.mat-mdc-snack-bar-container {
+  --notification-box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  --red-notification-bg: rgba(226, 52, 52, 0.85);
+  --green-notification-bg: rgb(149, 153, 226);
+
+  --mat-mdc-snack-bar-button-color: var(--text-on-gradient-color);
+  --mdc-snackbar-supporting-text-color: var(--text-on-gradient-color);
+
+  &.red-snackbar {
+    --mdc-snackbar-container-color: var(--red-notification-bg);
+    box-shadow: var(--notification-box-shadow);
+  }
+
+  &.green-snackbar {
+    --mdc-snackbar-container-color: var(--green-notification-bg);
+    box-shadow: var(--notification-box-shadow);
+  }
+}

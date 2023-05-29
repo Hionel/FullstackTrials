@@ -1,0 +1,7 @@
+<form class="form flexRow" [formGroup]="todoForm" (ngSubmit)="submitTask()">
+  <mat-form-field>
+    <mat-label>To do Task</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+  <button mat-button-raised color="secondary" type="submit">Submit task</button>
+</form>

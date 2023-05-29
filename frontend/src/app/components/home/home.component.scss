@@ -1,0 +1,15 @@
+.todo__input-container {
+  height: 20%;
+  margin-top: 1rem;
+}
+.todo__list-container {
+  height: 80%;
+  width: 100%;
+  .todo__list {
+    color: white;
+    gap: 1rem;
+    padding: 5rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+  }
+}
