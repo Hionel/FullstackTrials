@@ -7,6 +7,9 @@ const taskSchema = new mongoose.Schema({
 		min: 6,
 		max: 26,
 	},
+	userIdentifier: {
+		type: String,
+	},
 });
 const TaskSchema = mongoose.model("tasks", taskSchema);
 module.exports = { TaskSchema };

@@ -18,6 +18,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { CookieModule } from 'ngx-cookie';
 
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/auth/register/register.component';
@@ -27,7 +28,15 @@ import { AuthNavigationComponent } from './components/auth/auth-navigation/auth-
 import { HomeComponent } from './components/home/home.component';
 import { TodoFormComponent } from './components/home/todo-form/todo-form.component';
 
-const components = [AppComponent, RegisterComponent, AuthComponent];
+const components = [
+  AppComponent,
+  RegisterComponent,
+  AuthComponent,
+  LoginComponent,
+  AuthNavigationComponent,
+  HomeComponent,
+  TodoFormComponent,
+];
 const modules = [
   BrowserModule,
   AppRoutingModule,
@@ -49,10 +58,11 @@ const modules = [
   MatDialogModule,
   MatSelectModule,
   ReactiveFormsModule,
+  CookieModule.withOptions(),
 ];
 
 @NgModule({
-  declarations: [...components, LoginComponent, AuthNavigationComponent, HomeComponent, TodoFormComponent],
+  declarations: [...components],
   imports: [...modules],
   providers: [],
   bootstrap: [AppComponent],

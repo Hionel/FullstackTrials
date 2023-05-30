@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 dotenv.config();
 
 class MongoDb {
-	uri = `mongodb+srv://hionel:${process.env.MONGO_PASS}@mongotodo-cluster1.kiu7wo6.mongodb.net/?retryWrites=true&w=majority`;
+	uri = `mongodb+srv://hionel:${process.env.MONGO_PASS}@mongotodo-cluster1.kiu7wo6.mongodb.net/ToDoCluster?retryWrites=true&w=majority`;
 
 	db = mongoose.connection;
 	constructor() {}

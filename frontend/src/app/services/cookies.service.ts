@@ -1,33 +1,22 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
-import * as crypto from 'crypto-js';
+import { CookieService } from 'ngx-cookie';
+import jwt_decode from 'jwt-decode';
+import { IUser } from '../interfaces/iuser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CookiesService {
   constructor(private cookie: CookieService) {}
-
-  setTokenCookie(token: string) {
-    this.cookie.set('token', token);
-  }
-
-  getTokenCookie() {
-    const token = this.cookie.get('token');
-    const decryptedToken = crypto.AES.decrypt(
-      token,
-      'Very-secret-key'
-    ).toString(crypto.enc.Utf8);
-    if (decryptedToken) {
-      return JSON.parse(decryptedToken);
-    } else {
-      return console.error('get Token Cookie error');
-    }
-  }
-  deleteCookie() {
-    this.cookie.deleteAll();
-  }
-  checkCookie() {
-    return this.cookie.check('token');
-  }
+  userID!: string;
+  setTokenCookie = (token: string, time: string) => {
+    return this.cookie.put('token', token, { expires: time });
+  };
+  getTokenCookie = () => {
+    const encodedToken = this.cookie.get('token');
+    const decodedData = jwt_decode(encodedToken!) as IUser;
+    this.userID = decodedData._id;
+  };
+  deleteCookie() {}
+  checkCookie() {}
 }

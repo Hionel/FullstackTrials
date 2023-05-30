@@ -13,9 +13,6 @@
       value=""
       formControlName="email"
     />
-    <mat-error *ngIf="registerForm.get('email')!.hasError('alreadyInUse')">
-      Email is <strong>already</strong> in use
-    </mat-error>
     <mat-error
       *ngIf="
         registerForm.get('email')!.hasError('email') &&

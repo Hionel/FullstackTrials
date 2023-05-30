@@ -1,7 +1,15 @@
-<form class="form flexRow" [formGroup]="todoForm" (ngSubmit)="submitTask()">
+<form
+  class="task__form flexRow"
+  [formGroup]="todoForm"
+  (ngSubmit)="submitTask()"
+>
   <mat-form-field>
-    <mat-label>To do Task</mat-label>
+    <mat-label>Task to be done</mat-label>
     <input matInput formControlName="title" />
+    <mat-error *ngIf="todoForm.get('title')!.hasError('required')">
+      Title is <strong>required</strong>
+    </mat-error>
   </mat-form-field>
-  <button mat-button-raised color="secondary" type="submit">Submit task</button>
+
+  <button mat-button type="submit">Submit task</button>
 </form>

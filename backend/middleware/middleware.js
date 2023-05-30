@@ -1,5 +1,4 @@
 const { UserSchema } = require("../models/userSchema");
-const bcrypt = require("bcryptjs");
 
 const registerMiddleware = async (req, res, next) => {
 	const registrationData = req.body.userData;
@@ -7,6 +6,7 @@ const registerMiddleware = async (req, res, next) => {
 		return res.status(400).json({
 			status: "Bad request",
 			msg: "Request has no body data!",
+			success: false,
 		});
 	}
 	if (
@@ -17,7 +17,8 @@ const registerMiddleware = async (req, res, next) => {
 	) {
 		return res.status(412).json({
 			status: "Precondition failed",
-			msg: "User data is missing fields!",
+			msg: "Formulaire is missing fields!",
+			success: false,
 		});
 	}
 	const emailExists = await UserSchema.findOne({
@@ -27,7 +28,8 @@ const registerMiddleware = async (req, res, next) => {
 	if (emailExists) {
 		return res.status(409).json({
 			status: "Conflict",
-			msg: "Email already in use!",
+			msg: "Email is already in use!",
+			success: false,
 		});
 	}
 	next();
@@ -39,6 +41,7 @@ const loginMiddleware = async (req, res, next) => {
 		return res.status(412).json({
 			status: "Precondition failed",
 			msg: "One of the fields missing!",
+			success: false,
 		});
 	}
 	const user = await UserSchema.findOne({ email });
@@ -46,15 +49,10 @@ const loginMiddleware = async (req, res, next) => {
 		return res.status(404).json({
 			status: "Not found!",
 			msg: "User email not found!",
+			success: false,
 		});
 	}
-	const validatePassword = await bcrypt.compare(password, user.password);
-	if (!validatePassword) {
-		return res.status(409).json({
-			status: "Conflict!",
-			msg: "Passwords do NOT match!",
-		});
-	}
+
 	next();
 };
 

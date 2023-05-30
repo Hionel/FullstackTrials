@@ -1,4 +1,8 @@
-<section class="content-wrapper flexColumn">
-  <app-auth-navigation></app-auth-navigation>
-  <router-outlet></router-outlet>
+<section class="pages__container auth__page">
+  <div class="auth__navigation">
+    <app-auth-navigation></app-auth-navigation>
+  </div>
+  <main class="main__content">
+    <router-outlet></router-outlet>
+  </main>
 </section>

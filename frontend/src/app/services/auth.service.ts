@@ -4,12 +4,8 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SnackbarNotificationService } from './snackbar-notification.service';
 import { CookiesService } from './cookies.service';
+import { IResponse } from '../interfaces/iresponse';
 
-interface IResponse {
-  status: string;
-  msg?: string;
-  token?: string;
-}
 @Injectable({
   providedIn: 'root',
 })
@@ -34,12 +30,16 @@ export class AuthService {
       },
       body: raw,
     })
-      .then((response) => response.json())
-      .then((result) => {
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((result: IResponse) => {
         console.log(result);
-        if (result.status != 'Success') {
+        if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }
+        this.snackbarService.openSuccessSnack(result.msg!);
         this.router.navigate(['/auth/login']);
       })
       .catch((error) => console.log('error', error));
@@ -64,16 +64,17 @@ export class AuthService {
       body: raw,
     })
       .then((response) => {
-        console.log(response);
         const token = response.headers.get('Accesstoken');
-        this.cookieService.setTokenCookie(token!);
+        const expiryTime = response.headers.get('Expirytime');
+        this.cookieService.setTokenCookie(token!, expiryTime!);
         return response.json();
       })
       .then((result: IResponse) => {
         console.log(result);
-        if (result.status != 'Success') {
+        if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }
+        this.snackbarService.openSuccessSnack(result.msg!);
         this.router.navigate(['/home']);
       })
       .catch((error) => this.snackbarService.openErrorSnack(error.msg!));

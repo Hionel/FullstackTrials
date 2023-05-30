@@ -1,6 +1,6 @@
-<main class="content-wrapper flexColumn">
-  <section class="todo__input-container">
-    <app-todo-form></app-todo-form>
+<main class="pages__container flexColumn">
+  <section class="todo__input-container" *ngIf="userID">
+    <app-todo-form (taskSubmitted)="addTaskToList($event)"></app-todo-form>
   </section>
   <section class="todo__list-container flexColumn">
     <ul class="todo__list flexColumn">

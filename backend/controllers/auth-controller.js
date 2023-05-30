@@ -22,11 +22,13 @@ const registerAccount = async (req, res) => {
 		return res.status(201).json({
 			status: "Success",
 			msg: "Created account succesfully!",
+			success: true,
 		});
 	} catch (error) {
 		res.status(400).json({
 			status: "Request failed ",
 			msg: `${error}`,
+			success: false,
 		});
 	}
 };
@@ -34,28 +36,38 @@ const registerAccount = async (req, res) => {
 const loginAccount = async (req, res) => {
 	const { email, password } = req.body.loginData;
 	const user = await UserSchema.findOne({ email });
+	const validatePassword = await bcrypt.compare(password, user.password);
+	if (!validatePassword) {
+		return res.status(409).json({
+			status: "Conflict!",
+			msg: "Passwords do NOT match!",
+			success: false,
+		});
+	}
 	try {
 		const sessionTime = 3600;
 		const secretKey = "Very-secret-key";
-		const token = jwt.sign(
-			{
-				_id: user.id,
-				email: user.email,
-				firstname: user.firstname,
-				lastname: user.lastname,
-				creation_date: user.creation_date,
-			},
-			secretKey,
-			{ expiresIn: sessionTime }
-		);
+		const tokenData = {
+			_id: user.id,
+			email: user.email,
+			firstname: user.firstname,
+			lastname: user.lastname,
+			creation_date: user.creation_date,
+		};
+		const token = jwt.sign(JSON.stringify(tokenData), secretKey);
 		res.setHeader("Access-Control-Expose-Headers", "*");
-		res.setHeader("accesstoken", token);
-		res.setHeader("expiryTime", sessionTime);
-		return res.json({ status: "Success", msg: "Logged in succesfully" });
+		res.setHeader("Accesstoken", token);
+		res.setHeader("Expirytime", sessionTime);
+		return res.json({
+			status: "Success",
+			msg: "Logged in successfully",
+			success: true,
+		});
 	} catch (error) {
 		return res.status(400).json({
 			status: "Bad request",
 			msg: `Error encountered while logging in : ${error}`,
+			success: false,
 		});
 	}
 };

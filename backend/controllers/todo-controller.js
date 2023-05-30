@@ -4,6 +4,7 @@ const { TaskSchema } = require("../models/taskSchema");
 const postTask = async (req, res) => {
 	const taskData = req.body.taskData;
 	const taskExists = await TaskSchema.findOne({
+		userIdentifier: taskData.uid,
 		title: taskData.title,
 	});
 
@@ -15,6 +16,7 @@ const postTask = async (req, res) => {
 	}
 	const completeTaskData = {
 		_id: new mongoose.Types.ObjectId(),
+		userIdentifier: taskData.uid,
 		title: taskData.title,
 	};
 	const data = new TaskSchema(completeTaskData);
@@ -32,9 +34,11 @@ const postTask = async (req, res) => {
 	}
 };
 const getList = async (req, res) => {
+	const queryParamID = req.query.uid;
+	console.log(queryParamID);
 	try {
-		const taskList = await TaskSchema.find();
-		return res.status(200).json({
+		const taskList = await TaskSchema.find({ userIdentifier: queryParamID });
+		res.status(200).json({
 			status: "Success",
 			data: taskList,
 		});

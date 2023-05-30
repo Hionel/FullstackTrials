@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { SnackbarNotificationService } from './snackbar-notification.service';
+import { IList } from '../interfaces/ilist';
 
 interface IResponse {
   status: string;
@@ -15,6 +16,7 @@ export class TodoService {
   constructor(private snackbarService: SnackbarNotificationService) {}
   postTask = (taskFG: FormGroup) => {
     const taskData = taskFG.value;
+    console.log(taskData);
     const raw = JSON.stringify({
       taskData,
     });
@@ -37,22 +39,32 @@ export class TodoService {
       .catch((error) => this.snackbarService.openErrorSnack(error.msg!));
   };
 
-  getData = async () => {
-    return await fetch('http://localhost:4100/home/getList', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-    })
+  getData = async (userIdentifier: string) => {
+    console.log(userIdentifier);
+    return await fetch(
+      'http://localhost:4100/home/getList?' +
+        new URLSearchParams({
+          uid: userIdentifier,
+        }),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+      }
+    )
       .then((response) => {
         console.log(response);
         return response.json();
       })
       .then((result: IResponse) => {
         console.log(result);
-        return result.data;
+        return result.data as unknown as IList[];
       })
-      .catch((error) => this.snackbarService.openErrorSnack(error.msg!));
+      .catch((error) => {
+        console.log(error);
+        this.snackbarService.openErrorSnack(error);
+      });
   };
 }
