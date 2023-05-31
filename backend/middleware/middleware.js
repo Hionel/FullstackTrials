@@ -1,4 +1,5 @@
 const { UserSchema } = require("../models/userSchema");
+const { TaskSchema } = require("../models/taskSchema");
 
 const registerMiddleware = async (req, res, next) => {
 	const registrationData = req.body.userData;
@@ -56,4 +57,28 @@ const loginMiddleware = async (req, res, next) => {
 	next();
 };
 
-module.exports = { registerMiddleware, loginMiddleware };
+const postDataMiddleware = async (req, res, next) => {
+	const taskData = req.body.taskData;
+	if (!taskData.title) {
+		return res.status(412).json({
+			status: "Precondition failed",
+			msg: "Task needs a title!",
+			success: false,
+		});
+	}
+	const taskExists = await TaskSchema.findOne({
+		userIdentifier: taskData.uid,
+		title: taskData.title,
+	});
+
+	if (taskExists) {
+		return res.status(409).json({
+			status: "Conflict",
+			msg: "Task already exists!",
+			success: false,
+		});
+	}
+	next();
+};
+
+module.exports = { registerMiddleware, loginMiddleware, postDataMiddleware };
