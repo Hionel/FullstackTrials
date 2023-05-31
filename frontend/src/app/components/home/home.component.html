@@ -3,8 +3,40 @@
     <app-todo-form (taskSubmitted)="addTaskToList($event)"></app-todo-form>
   </section>
   <section class="todo__list-container flexColumn">
-    <ul class="todo__list flexColumn">
-      <li *ngFor="let task of listData">{{ task.title }}</li>
+    <ul class="todo__list flexColumn" *ngIf="listData!.length > 0">
+      <li
+        *ngFor="let task of listData"
+        id="{{ task._id }}"
+        class="list__item flexRow"
+      >
+        <mat-form-field>
+          <input
+            matInput
+            [value]="task.title"
+            [readonly]="!task.editable"
+            #inputValue
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="editItem(task)"
+            *ngIf="!task.editable"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="saveNewTask(task, inputValue.value)"
+            *ngIf="task.editable"
+          >
+            <mat-icon>save</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="deleteItem(task)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-form-field>
+      </li>
     </ul>
   </section>
 </main>

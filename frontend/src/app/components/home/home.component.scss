@@ -5,13 +5,20 @@
 .todo__list-container {
   height: 80%;
   width: 100%;
+  overflow-y: scroll;
   .todo__list {
-    color: white;
+    width: 60%;
     font-size: 1rem;
     gap: 1rem;
-    padding: 5rem;
+    padding: 2.5rem;
     border: 1.5px solid rgba(255, 255, 255, 0.9);
     background-color: var(--card-bg-color);
     border-radius: 5px;
+    .list__item {
+      width: 100%;
+      button:last-of-type {
+        margin-right: 1rem;
+      }
+    }
   }
 }
