@@ -26,7 +26,6 @@ const postTask = async (req, res) => {
 };
 const getList = async (req, res) => {
 	const queryParamID = req.query.uid;
-	console.log(queryParamID);
 	try {
 		const taskList = await TaskSchema.find({ userIdentifier: queryParamID });
 		res.status(200).json({

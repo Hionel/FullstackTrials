@@ -1,4 +1,10 @@
 <main class="pages__container flexColumn">
+  <header class="home__header flexRow">
+    <H1>Fullstack TODO</H1>
+    <button mat-icon-button matSuffix (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </header>
   <section class="todo__input-container" *ngIf="userID">
     <app-todo-form (taskSubmitted)="addTaskToList($event)"></app-todo-form>
   </section>

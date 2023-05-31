@@ -17,6 +17,14 @@ export class CookiesService {
     const decodedData = jwt_decode(encodedToken!) as IUser;
     this.userID = decodedData._id;
   };
-  deleteCookie() {}
-  checkCookie() {}
+  deleteCookie() {
+    return this.cookie.remove('token');
+  }
+  checkCookie() {
+    const token = this.cookie.get('token');
+    if (!token || token === '') {
+      return false;
+    }
+    return true;
+  }
 }

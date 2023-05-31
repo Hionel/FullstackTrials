@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { IList } from 'src/app/interfaces/ilist';
 import { CookiesService } from 'src/app/services/cookies.service';
 import { TodoService } from 'src/app/services/todo.service';
@@ -14,7 +15,8 @@ export class HomeComponent {
   editableTask: boolean = false;
   constructor(
     private todoService: TodoService,
-    private cookieService: CookiesService
+    private cookieService: CookiesService,
+    private router: Router
   ) {
     this.cookieService.getTokenCookie();
     this.userID = this.cookieService.userID;
@@ -22,8 +24,6 @@ export class HomeComponent {
   }
 
   addTaskToList(task: IList) {
-    console.log(this.listData);
-    console.log(task);
     if (task.title === '' || !task.title) {
       return;
     }
@@ -49,8 +49,6 @@ export class HomeComponent {
   };
 
   saveNewTask = (task: IList, newValue: string) => {
-    console.log(task);
-    console.log(newValue);
     task.editable = !task.editable;
     task.title = newValue;
     this.todoService.updateTask(task._id, newValue);
@@ -59,5 +57,10 @@ export class HomeComponent {
     const index = this.listData?.indexOf(task);
     this.listData?.splice(index!, 1);
     this.todoService.deleteTask(task);
+  };
+
+  logout = () => {
+    this.cookieService.deleteCookie();
+    this.router.navigate(['auth/login']);
   };
 }

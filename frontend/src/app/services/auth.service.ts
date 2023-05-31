@@ -31,18 +31,18 @@ export class AuthService {
       body: raw,
     })
       .then((response) => {
-        console.log(response);
         return response.json();
       })
       .then((result: IResponse) => {
-        console.log(result);
         if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }
         this.snackbarService.openSuccessSnack(result.msg!);
         this.router.navigate(['/auth/login']);
       })
-      .catch((error) => console.log('error', error));
+      .catch((error) => {
+        return this.snackbarService.openErrorSnack(error);
+      });
   };
 
   loginUser = (emailInput: string, passwordInput: string) => {
@@ -70,7 +70,6 @@ export class AuthService {
         return response.json();
       })
       .then((result: IResponse) => {
-        console.log(result);
         if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }
