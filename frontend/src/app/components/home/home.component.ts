@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IList } from 'src/app/interfaces/ilist';
 import { CookiesService } from 'src/app/services/cookies.service';
+import { SnackbarNotificationService } from 'src/app/services/snackbar-notification.service';
 import { TodoService } from 'src/app/services/todo.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class HomeComponent {
   constructor(
     private todoService: TodoService,
     private cookieService: CookiesService,
-    private router: Router
+    private router: Router,
+    private snackbarNotification: SnackbarNotificationService
   ) {
     this.cookieService.getTokenCookie();
     this.userID = this.cookieService.userID;
@@ -50,8 +52,11 @@ export class HomeComponent {
 
   saveNewTask = (task: IList, newValue: string) => {
     task.editable = !task.editable;
+    if (task.title === newValue) {
+      return this.snackbarNotification.openErrorSnack('No changes done!');
+    }
     task.title = newValue;
-    this.todoService.updateTask(task._id, newValue);
+    return this.todoService.updateTask(task._id, newValue);
   };
   deleteItem = (task: IList) => {
     const index = this.listData?.indexOf(task);

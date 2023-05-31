@@ -1,14 +1,14 @@
 <main class="pages__container flexColumn">
   <header class="home__header flexRow">
     <H1>Fullstack TODO</H1>
-    <button mat-icon-button matSuffix (click)="logout()">
+    <button mat-mini-fab matSuffix color="warn" (click)="logout()">
       <mat-icon>logout</mat-icon>
     </button>
   </header>
   <section class="todo__input-container" *ngIf="userID">
     <app-todo-form (taskSubmitted)="addTaskToList($event)"></app-todo-form>
   </section>
-  <section class="todo__list-container flexColumn">
+  <section class="todo__list-container">
     <ul class="todo__list flexColumn" *ngIf="listData!.length > 0">
       <li
         *ngFor="let task of listData"
@@ -33,12 +33,18 @@
           <button
             mat-icon-button
             matSuffix
+            color="primary"
             (click)="saveNewTask(task, inputValue.value)"
             *ngIf="task.editable"
           >
             <mat-icon>save</mat-icon>
           </button>
-          <button mat-icon-button matSuffix (click)="deleteItem(task)">
+          <button
+            mat-icon-button
+            matSuffix
+            color="warn"
+            (click)="deleteItem(task)"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </mat-form-field>
