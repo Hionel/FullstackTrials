@@ -14,9 +14,6 @@ const registerAccount = async (req, res) => {
 		password: registrationData.password,
 	};
 	const user = new UserSchema(completeRegistrationData);
-	const salt = await bcrypt.genSalt(10);
-	const hashPassword = await bcrypt.hash(user.password, salt);
-	user.password = hashPassword;
 	try {
 		await user.save();
 		return res.status(201).json({
@@ -36,7 +33,7 @@ const registerAccount = async (req, res) => {
 const loginAccount = async (req, res) => {
 	const { email, password } = req.body.loginData;
 	const user = await UserSchema.findOne({ email });
-	const validatePassword = await bcrypt.compare(password, user.password);
+	const validatePassword = bcrypt.compareSync(password, user.password);
 	if (!validatePassword) {
 		return res.status(409).json({
 			status: "Conflict!",
@@ -45,8 +42,8 @@ const loginAccount = async (req, res) => {
 		});
 	}
 	try {
-		const sessionTime = 3600;
-		const secretKey = "Very-secret-key";
+		const sessionTime = process.env.SESSION_TIME;
+		const secretKey = process.env.SECRET_KEY;
 		const tokenData = {
 			_id: user.id,
 			email: user.email,
