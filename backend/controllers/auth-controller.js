@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { UserSchema } = require("../models/userSchema");
+const { v4: uuidv4 } = require("uuid");
 
 const registerAccount = async (req, res) => {
 	const registrationData = req.body.userData;
@@ -42,6 +43,7 @@ const loginAccount = async (req, res) => {
 		});
 	}
 	try {
+		const sessionId = generateSessionId();
 		const sessionTime = process.env.SESSION_TIME;
 		const secretKey = process.env.SECRET_KEY;
 		const tokenData = {
@@ -50,12 +52,15 @@ const loginAccount = async (req, res) => {
 			firstname: user.firstname,
 			lastname: user.lastname,
 			creation_date: user.creation_date,
+			sessionId: sessionId,
 		};
-		const token = jwt.sign(JSON.stringify(tokenData), secretKey);
+		const token = jwt.sign(tokenData, secretKey, {
+			expiresIn: sessionTime,
+		});
 		res.setHeader("Access-Control-Expose-Headers", "*");
 		res.setHeader("Accesstoken", token);
 		res.setHeader("Expirytime", sessionTime);
-		return res.json({
+		return res.status(200).json({
 			status: "Success",
 			msg: "Logged in successfully",
 			success: true,
@@ -67,6 +72,10 @@ const loginAccount = async (req, res) => {
 			success: false,
 		});
 	}
+};
+
+const generateSessionId = () => {
+	return uuidv4();
 };
 
 module.exports = { registerAccount, loginAccount };

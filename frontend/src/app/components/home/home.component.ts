@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { IList } from 'src/app/interfaces/ilist';
+import { AuthService } from 'src/app/services/auth.service';
 import { CookiesService } from 'src/app/services/cookies.service';
 import { SnackbarNotificationService } from 'src/app/services/snackbar-notification.service';
 import { TodoService } from 'src/app/services/todo.service';
@@ -17,8 +17,8 @@ export class HomeComponent {
   constructor(
     private todoService: TodoService,
     private cookieService: CookiesService,
-    private router: Router,
-    private snackbarNotification: SnackbarNotificationService
+    private snackbarNotification: SnackbarNotificationService,
+    private authService: AuthService
   ) {
     this.cookieService.getTokenCookie();
     this.userID = this.cookieService.userID;
@@ -65,7 +65,6 @@ export class HomeComponent {
   };
 
   logout = () => {
-    this.cookieService.deleteCookie();
-    this.router.navigate(['auth/login']);
+    this.authService.logoutUser();
   };
 }

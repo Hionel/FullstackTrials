@@ -3,13 +3,20 @@ import { FormGroup } from '@angular/forms';
 import { SnackbarNotificationService } from './snackbar-notification.service';
 import { IList } from '../interfaces/ilist';
 import { IResponse } from '../interfaces/iresponse';
+import { CookiesService } from './cookies.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  constructor(private snackbarService: SnackbarNotificationService) {}
+  constructor(
+    private snackbarService: SnackbarNotificationService,
+    private cookiesService: CookiesService,
+    private authService: AuthService
+  ) {}
   postTask = (taskFG: FormGroup) => {
+    const token: string = JSON.stringify(this.cookiesService.getTokenCookie());
     const taskData = taskFG.value;
     const raw = JSON.stringify({
       taskData,
@@ -20,6 +27,7 @@ export class TodoService {
       headers: {
         Accept: 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
+        Token: token,
       },
       body: raw,
     })
@@ -27,6 +35,10 @@ export class TodoService {
         return response.json();
       })
       .then((result: IResponse) => {
+        if (!result.success && result.status === 'Unauthorized') {
+          this.snackbarService.openErrorSnack(result.msg!);
+          return this.authService.logoutUser();
+        }
         if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }
@@ -36,6 +48,8 @@ export class TodoService {
   };
 
   getData = async (userIdentifier: string) => {
+    const token: string = JSON.stringify(this.cookiesService.getTokenCookie());
+
     return await fetch(
       'http://localhost:4100/home/getList?' +
         new URLSearchParams({
@@ -46,6 +60,7 @@ export class TodoService {
         headers: {
           Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json',
+          Token: token,
         },
       }
     )
@@ -53,6 +68,13 @@ export class TodoService {
         return response.json();
       })
       .then((result: IResponse) => {
+        if (!result.success && result.status === 'Unauthorized') {
+          this.snackbarService.openErrorSnack(result.msg!);
+          return this.authService.logoutUser();
+        }
+        if (!result.success) {
+          return this.snackbarService.openErrorSnack(result.msg!);
+        }
         return result.data as unknown as IList[];
       })
       .catch((error) => {
@@ -61,12 +83,15 @@ export class TodoService {
   };
 
   deleteTask = async (task: IList) => {
+    const token: string = JSON.stringify(this.cookiesService.getTokenCookie());
+
     const raw = JSON.stringify(task);
     fetch('http://localhost:4100/home/delete', {
       method: 'DELETE',
       headers: {
         Accept: 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
+        Token: token,
       },
       body: raw,
     })
@@ -74,6 +99,10 @@ export class TodoService {
         return response.json();
       })
       .then((result: IResponse) => {
+        if (!result.success && result.status === 'Unauthorized') {
+          this.snackbarService.openErrorSnack(result.msg!);
+          return this.authService.logoutUser();
+        }
         if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }
@@ -85,6 +114,7 @@ export class TodoService {
   };
 
   updateTask = (taskID: string, newValue: string) => {
+    const token: string = JSON.stringify(this.cookiesService.getTokenCookie());
     const raw = JSON.stringify({
       taskID: taskID,
       newTitle: newValue,
@@ -94,6 +124,7 @@ export class TodoService {
       headers: {
         Accept: 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
+        Token: token,
       },
       body: raw,
     })
@@ -101,6 +132,10 @@ export class TodoService {
         return response.json();
       })
       .then((result: IResponse) => {
+        if (!result.success && result.status === 'Unauthorized') {
+          this.snackbarService.openErrorSnack(result.msg!);
+          return this.authService.logoutUser();
+        }
         if (!result.success) {
           return this.snackbarService.openErrorSnack(result.msg!);
         }

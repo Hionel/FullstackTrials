@@ -16,6 +16,7 @@ export class CookiesService {
     const encodedToken = this.cookie.get('token');
     const decodedData = jwt_decode(encodedToken!) as IUser;
     this.userID = decodedData._id;
+    return encodedToken;
   };
   deleteCookie() {
     return this.cookie.remove('token');

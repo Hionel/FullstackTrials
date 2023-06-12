@@ -76,6 +76,13 @@ export class AuthService {
         this.snackbarService.openSuccessSnack(result.msg!);
         this.router.navigate(['/home']);
       })
-      .catch((error) => this.snackbarService.openErrorSnack(error.msg!));
+      .catch((error) => {
+        this.snackbarService.openErrorSnack(error.msg!);
+      });
+  };
+
+  logoutUser = () => {
+    this.cookieService.deleteCookie();
+    this.router.navigate(['auth/login']);
   };
 }

@@ -1,5 +1,6 @@
 const { UserSchema } = require("../models/userSchema");
 const { TaskSchema } = require("../models/taskSchema");
+const jwt_decode = require("jwt-decode");
 
 const registerMiddleware = async (req, res, next) => {
 	const registrationData = req.body.userData;
@@ -81,4 +82,34 @@ const postDataMiddleware = async (req, res, next) => {
 	next();
 };
 
-module.exports = { registerMiddleware, loginMiddleware, postDataMiddleware };
+const checkToken = async (req, res, next) => {
+	const token = req.headers.token;
+	console.log(token);
+	if (!req.headers.token) {
+		return res.status(404).json({
+			status: "Not found",
+			msg: "User is not logged in!",
+			success: false,
+		});
+	}
+	const tokenExpiryTime = Number(jwt_decode(token).exp);
+	const currentTime = Math.round(Date.now() / 1000);
+	console.log("-----------------");
+	console.log("tokenExpiry: ", tokenExpiryTime);
+	console.log("currentTime: ", currentTime);
+	if (tokenExpiryTime > currentTime) {
+		return next();
+	}
+	return res.status(401).json({
+		status: "Unauthorized",
+		msg: "Token has expired!",
+		success: false,
+	});
+};
+
+module.exports = {
+	registerMiddleware,
+	loginMiddleware,
+	postDataMiddleware,
+	checkToken,
+};
